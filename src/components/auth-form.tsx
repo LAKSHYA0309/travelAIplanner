@@ -21,19 +21,26 @@ export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
     setError(null)
     setLoading(true)
 
-    const { error } = isSignUp
-      ? await authClient.signUp.email({ email, password, name })
-      : await authClient.signIn.email({ email, password })
+    try {
+      const { error } = isSignUp
+        ? await authClient.signUp.email({ email, password, name })
+        : await authClient.signIn.email({ email, password })
 
-    setLoading(false)
+      setLoading(false)
 
-    if (error) {
-      setError(error.message ?? 'Something went wrong')
-      return
+      if (error) {
+        console.error('[v0] Auth error:', error)
+        setError(error.message ?? 'Something went wrong')
+        return
+      }
+
+      router.push('/')
+      router.refresh()
+    } catch (err) {
+      console.error('[v0] Auth exception:', err)
+      setError(String(err))
+      setLoading(false)
     }
-
-    router.push('/')
-    router.refresh()
   }
 
   const handleGoogleSignIn = async () => {

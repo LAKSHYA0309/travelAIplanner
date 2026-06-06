@@ -1,6 +1,9 @@
 import { betterAuth } from 'better-auth'
 import { pool } from '@/lib/db'
 
+console.log('[v0] Database pool created:', !!pool)
+console.log('[v0] DATABASE_URL configured:', !!process.env.DATABASE_URL)
+
 export const auth = betterAuth({
   database: pool as any,
   baseURL:
